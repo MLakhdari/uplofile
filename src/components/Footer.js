@@ -1,22 +1,31 @@
 import React from "react";
+import styled from "styled-components";
 
-function Footer() {
+const FooterContainer = styled.footer`
+  background-color: #333;
+  color: #fff;
+  padding: 20px 0;
+`;
+
+const FooterText = styled.p`
+  margin: 0;
+`;
+
+const Footer = () => {
   return (
-    <footer className="bg-dark py-3 position-fixed bottom-0 w-100">
+    <FooterContainer>
       <div className="container">
         <div className="row text-center">
           <div className="col-md-6">
-            <p className="mb-0 text-light">
-              Uplofile &copy; {new Date().getFullYear()}
-            </p>
+            <FooterText>Uplofile &copy; {new Date().getFullYear()}</FooterText>
           </div>
           <div className="col-md-6">
-            <p className="mb-0 text-light">Développé avec amour par MedLakh</p>
+            <FooterText>Développé avec amour par MedLakh</FooterText>
           </div>
         </div>
       </div>
-    </footer>
+    </FooterContainer>
   );
-}
+};
 
 export default Footer;
