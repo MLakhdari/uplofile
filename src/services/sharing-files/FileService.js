@@ -8,8 +8,8 @@ const getProgressDownload = (id, options) => {
   return http.get(`/documents/download-progress/${id}`, options);
 };
 
-const get = (id, fileName) => {
-  return http.get("/documents?file=" + fileName + "&id=" + id);
+const get = (id, fileName, options) => {
+  return http.get("/documents?file=" + fileName + "&id=" + id, options);
 };
 
 const create = (data) => {

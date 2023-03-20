@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Helmet, HelmetProvider } from "react-helmet-async";
 import styled from "styled-components";
 import { v4 as uuidv4 } from "uuid";
@@ -63,10 +63,6 @@ const FileDownloader = () => {
   const [totalBytesToTransfer, setTotalBytesToTransfer] = useState(0);
   const [isLoading, setLoading] = useState(false);
   const [fileName, setFileName] = useState(useQuery());
-  const [originFileName, setOriginFileName] = useState(
-    fileName ? fileName.substring(0, fileName.lastIndexOf("_")) : ""
-  );
-  const [file, setFile] = useState();
   const [errorMessage, setErrorMessage] = useState("");
   const userId = uuidv4();
 
@@ -95,13 +91,17 @@ const FileDownloader = () => {
     const formData = new FormData();
     formData.append("id", userId);
 
-    FileService.get(userId, fileName)
+    FileService.get(userId, fileName, { responseType: "blob" })
       .then((response) => {
         setProgress(100);
         clearInterval(interval);
         setLoading(false);
         if (response.status === 200) {
-          setFile(response.data);
+          const url = window.URL.createObjectURL(response.data);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = fileName;
+          a.click();
         }
       })
       .catch((error) => {
@@ -109,31 +109,16 @@ const FileDownloader = () => {
         clearInterval(interval);
         setProgress(0);
         setTotalBytesToTransfer(0);
-        setFile();
-        if (error.response.status === 404) {
+        if (error.response && error.response.status === 404) {
           setErrorMessage(error.response.data.message);
         }
       });
   };
 
-  useEffect(() => {
-    if (file) {
-      const blob = new Blob([file]);
-      const downloadLink = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = downloadLink;
-      a.download = originFileName;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(downloadLink);
-      setFile();
-    }
-  }, [file, originFileName]);
-
   const handleFileNameChange = (event) => {
-    setFileName(event.target.value);
-    setOriginFileName(event.target.value);
+    const regex1 = /.*\/download\?file=/;
+    let fileN = event.target.value.replace(regex1, "");
+    setFileName(fileN);
   };
 
   return (
@@ -167,7 +152,7 @@ const FileDownloader = () => {
                     className="form-control"
                     id="urlInput"
                     placeholder="Enter file name.."
-                    value={originFileName}
+                    value={fileName}
                     onChange={handleFileNameChange}
                   />
                 </div>
