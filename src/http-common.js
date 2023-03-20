@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export default axios.create({
-  baseURL: "http://localhost:9000/api/services",
+  baseURL: "https://uplofile.com/api/services",
   headers: {
     "Content-Type": "multipart/form-data",
   },
