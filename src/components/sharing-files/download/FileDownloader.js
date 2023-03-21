@@ -110,7 +110,12 @@ const FileDownloader = () => {
         setProgress(0);
         setTotalBytesToTransfer(0);
         if (error.response && error.response.status === 404) {
-          setErrorMessage(error.response.data.message);
+          setErrorMessage("The requested document was not found.");
+        }
+        if (error.response && error.response.status === 500) {
+          setErrorMessage(
+            "A technical error has occurred. Please contact support."
+          );
         }
       });
   };
