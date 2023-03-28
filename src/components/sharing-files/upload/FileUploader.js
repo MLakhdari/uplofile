@@ -107,15 +107,21 @@ function FileUploader() {
       formData.append("file", file);
       formData.append("id", userId);
 
-      FileService.create(formData)
+      FileService.create(formData, {
+        onUploadProgress: (progressEvent) => {
+          const percentCompleted = progressEvent.loaded / progressEvent.total;
+          let percent = Math.floor(percentCompleted * 100);
+          setProgress(percent);
+        },
+      })
         .then((response) => {
-          setProgress(100);
-          clearInterval(interval);
           setUrl(response.data);
           setLoading(false);
+          clearInterval(interval);
+          setProgress(100);
         })
         .catch((error) => {
-          console.log(error.message);
+          clearInterval(interval);
         });
     },
     [userId]

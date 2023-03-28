@@ -12,8 +12,8 @@ const get = (id, fileName, options) => {
   return http.get("/documents?file=" + fileName + "&id=" + id, options);
 };
 
-const create = (data) => {
-  return http.post("/documents/", data);
+const create = (data, options) => {
+  return http.post("/documents/", data, options);
 };
 
 const FileService = {
